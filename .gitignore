@@ -1,0 +1,4 @@
+BuildAndPublishAll.bat
+.vscode/
+export/
+wip/
