@@ -1,4 +1,6 @@
-BuildAndPublishAll.bat
 .vscode/
 export/
 wip/
+private/
+publish -*.bat
+build -*.bat
