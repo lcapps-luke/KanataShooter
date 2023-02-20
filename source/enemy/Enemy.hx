@@ -36,6 +36,11 @@ class Enemy extends FlxSprite {
 		}
 	}
 
+	override function hurt(damage:Float) {
+		super.hurt(damage);
+		FlxG.sound.play(alive ? AssetPaths.hit__wav : AssetPaths.explosion__wav);
+	}
+
 	private function makeEnemy(offsetX:Float, offsetY:Float) {
 		var a = group.recycle(SingleEnemy, SingleEnemy.new);
 		a.group = group;

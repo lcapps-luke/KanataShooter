@@ -134,6 +134,8 @@ class Kanata extends FlxSprite {
 			b.x = x;
 			b.y = y;
 			b.velocity.set(HALO_SPEED);
+
+			FlxG.sound.play(AssetPaths.shoot__wav, 0.6);
 		}
 
 		if (hitTimer > 0) {
@@ -152,6 +154,7 @@ class Kanata extends FlxSprite {
 		if (hitTimer <= 0) {
 			FlxFlicker.flicker(this, 1.2, 0.08);
 			hitTimer = 1.3;
+			FlxG.sound.play(AssetPaths.hurt__wav);
 		}
 	}
 }

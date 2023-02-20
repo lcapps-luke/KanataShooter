@@ -10,6 +10,7 @@ class Main extends Sprite {
 
 		var game = new FlxGame(1920, 1080, PlayState, 60, 60, true);
 
+		FlxG.sound.volume = 0.3;
 		FlxG.mouse.useSystemCursor = true;
 
 		addChild(game);
