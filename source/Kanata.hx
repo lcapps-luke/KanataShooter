@@ -108,8 +108,8 @@ class Kanata extends FlxSprite {
 
 		if (mx != 0 || my != 0) {
 			var dir = Math.atan2(my, mx);
-			x += Math.cos(dir) * SPEED * elapsed;
-			y += Math.sin(dir) * SPEED * elapsed;
+			x += (Math.cos(dir) * SPEED * elapsed) * Math.abs(mx);
+			y += (Math.sin(dir) * SPEED * elapsed) * Math.abs(my);
 		}
 
 		if (y < 0) {
