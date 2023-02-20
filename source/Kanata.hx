@@ -8,6 +8,8 @@ import flixel.input.actions.FlxAction.FlxActionAnalog;
 import flixel.input.actions.FlxAction.FlxActionDigital;
 import flixel.input.actions.FlxActionManager;
 import flixel.util.FlxDestroyUtil;
+import input.ActionInputAnalogTouchMotion;
+import input.ActionInputDigitalTouch;
 
 class Kanata extends FlxSprite {
 	private static inline var MIN_X = 150;
@@ -79,6 +81,10 @@ class Kanata extends FlxSprite {
 		shoot.addGamepad(LEFT_SHOULDER, PRESSED);
 		shoot.addGamepad(RIGHT_TRIGGER, PRESSED);
 		shoot.addGamepad(RIGHT_SHOULDER, PRESSED);
+
+		// touch
+		move.add(new ActionInputAnalogTouchMotion(MOVED, EITHER, 5));
+		shoot.add(new ActionInputDigitalTouch(PRESSED));
 	}
 
 	override public function update(elapsed:Float) {
