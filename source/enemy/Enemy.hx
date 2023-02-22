@@ -10,6 +10,8 @@ class Enemy extends FlxSprite {
 	public var killCallback:Enemy->Void;
 	public var group:FlxTypedGroup<Enemy>;
 
+	public var size(default, null):Int = 1;
+
 	override function update(elapsed:Float) {
 		super.update(elapsed);
 

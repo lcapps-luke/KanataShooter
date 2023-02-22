@@ -7,6 +7,8 @@ class QuadEnemy extends Enemy {
 		super(0, 0, AssetPaths.enemy_4__png);
 		health = 3;
 		angle = FlxG.random.float(0, 360);
+
+		this.size = 4;
 	}
 
 	override function revive() {

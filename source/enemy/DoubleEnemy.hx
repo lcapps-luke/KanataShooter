@@ -7,6 +7,8 @@ class DoubleEnemy extends Enemy {
 		super(0, 0, AssetPaths.enemy_2__png);
 		health = 3;
 		angle = FlxG.random.float(0, 360);
+
+		this.size = 2;
 	}
 
 	override function revive() {
