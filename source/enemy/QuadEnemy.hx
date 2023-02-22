@@ -5,7 +5,7 @@ import flixel.FlxG;
 class QuadEnemy extends Enemy {
 	public function new() {
 		super(0, 0, AssetPaths.enemy_4__png);
-		health = 3;
+		health = 8;
 		angle = FlxG.random.float(0, 360);
 
 		this.size = 4;

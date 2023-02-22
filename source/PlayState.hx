@@ -199,6 +199,8 @@ class PlayState extends FlxState {
 	private function onPickup(radius:FlxSprite, pickup:PowerPickup) {
 		pickup.kill();
 		powerMeter.value++;
+
+		kanata.power = powerMeter.getFilled();
 	}
 
 	private function onEnemyKill(enemy:Enemy) {

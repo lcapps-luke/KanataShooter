@@ -39,7 +39,7 @@ class PowerMeter extends FlxTypedGroup<FlxSprite> {
 		var offset = 0;
 		var fill = 0;
 		for (i in 0...qty.length) {
-			if (offset >= qty[i]) {
+			if (value >= offset + qty[i]) {
 				fill++;
 			}
 			else {
@@ -52,7 +52,7 @@ class PowerMeter extends FlxTypedGroup<FlxSprite> {
 		return fill;
 	}
 
-	public function set_value(v:Int):Int {
+	private function set_value(v:Int):Int {
 		var offset = 0;
 		for (i in 0...qty.length) {
 			var sz = Math.max(0, Math.min((v - offset) / qty[i], 1));

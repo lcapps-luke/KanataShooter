@@ -5,7 +5,7 @@ import flixel.FlxG;
 class TrippleEnemy extends Enemy {
 	public function new() {
 		super(0, 0, AssetPaths.enemy_3__png);
-		health = 3;
+		health = 6;
 		angle = FlxG.random.float(0, 360);
 
 		this.size = 3;

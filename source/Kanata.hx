@@ -1,5 +1,8 @@
 package;
 
+import firemode.AbstractFireMode;
+import firemode.DoubleFireMode;
+import firemode.SingleFireMode;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.effects.FlxFlicker;
@@ -14,7 +17,6 @@ import input.ActionInputDigitalTouch;
 class Kanata extends FlxSprite {
 	private static inline var MIN_X = 150;
 	private static inline var SPEED = 512.0;
-	private static inline var SHOOT_COOLDOWN = 0.25;
 	private static inline var HALO_SPEED = 1280;
 
 	private var haloGroup:FlxTypedSpriteGroup<Halo>;
@@ -28,9 +30,11 @@ class Kanata extends FlxSprite {
 	private var shoot:FlxActionDigital;
 	private var move:FlxActionAnalog;
 
-	private var shootCooldown:Float = 0;
+	private var fireMode:AbstractFireMode;
 
 	private var hitTimer:Float = 0;
+
+	public var power(default, set):Int = 0;
 
 	public function new(haloGroup:FlxTypedSpriteGroup<Halo>) {
 		super();
@@ -43,6 +47,8 @@ class Kanata extends FlxSprite {
 		setSize(60, 60);
 		offset.set(426, 270);
 		origin.set(461, 300);
+
+		fireMode = new SingleFireMode(haloGroup);
 
 		actions = FlxG.inputs.add(new FlxActionManager());
 
@@ -126,17 +132,7 @@ class Kanata extends FlxSprite {
 			x = FlxG.width - width;
 		}
 
-		shootCooldown -= elapsed;
-		if (shoot.triggered && shootCooldown < 0) {
-			shootCooldown = SHOOT_COOLDOWN;
-
-			var b = haloGroup.recycle(Halo, Halo.new);
-			b.x = x;
-			b.y = y;
-			b.velocity.set(HALO_SPEED);
-
-			FlxG.sound.play(AssetPaths.shoot__wav, 0.6);
-		}
+		fireMode.update(elapsed, x, y, shoot.triggered);
 
 		if (hitTimer > 0) {
 			hitTimer -= elapsed;
@@ -156,5 +152,18 @@ class Kanata extends FlxSprite {
 			hitTimer = 1.3;
 			FlxG.sound.play(AssetPaths.hurt__wav);
 		}
+	}
+
+	private function set_power(v:Int):Int {
+		if (v != power) {
+			fireMode = switch (v) {
+				case 0: new SingleFireMode(haloGroup);
+				case 1: new DoubleFireMode(haloGroup);
+				case 2: new DoubleFireMode(haloGroup);
+				default: new DoubleFireMode(haloGroup);
+			}
+		}
+
+		return power = v;
 	}
 }
