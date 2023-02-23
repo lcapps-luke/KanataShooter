@@ -200,9 +200,13 @@ class PlayState extends FlxState {
 
 	private function onPickup(radius:FlxSprite, pickup:PowerPickup) {
 		pickup.kill();
+		var before = powerMeter.getFilled();
 		powerMeter.value++;
+		var after = powerMeter.getFilled();
 
-		kanata.power = powerMeter.getFilled();
+		FlxG.sound.play(after > before ? AssetPaths.powerUp__wav : AssetPaths.pickup__wav);
+
+		kanata.power = after;
 	}
 
 	private function onEnemyKill(enemy:Enemy) {
