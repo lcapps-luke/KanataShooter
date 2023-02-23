@@ -186,6 +186,8 @@ class PlayState extends FlxState {
 		enemy.kill();
 		kanata.hurt(0);
 		score = 0;
+		powerMeter.value = Math.floor(powerMeter.value / 4);
+		kanata.power = powerMeter.getFilled();
 	}
 
 	private inline function checkPickupRadiusHit(radius:FlxSprite, pickup:PowerPickup):Bool {

@@ -5,6 +5,11 @@ import flixel.FlxSprite;
 import flixel.util.FlxColorTransformUtil;
 
 class Halo extends FlxSprite {
+	private var initialY:Float;
+	private var motionFunction:Float->Float = null;
+	private var motionFunctionTime:Float = 0;
+	private var motionFunctionTimeIncrement:Float = 0;
+
 	public function new() {
 		super();
 
@@ -15,11 +20,29 @@ class Halo extends FlxSprite {
 		FlxColorTransformUtil.setOffsets(colorTransform, 200, 124, -200, 0);
 	}
 
+	override function revive() {
+		super.revive();
+
+		motionFunction = null;
+		motionFunctionTime = 0;
+	}
+
 	override function update(elapsed:Float) {
 		super.update(elapsed);
 
 		if (x > FlxG.width + width) {
 			kill();
 		}
+
+		if (motionFunction != null) {
+			motionFunctionTime += motionFunctionTimeIncrement * elapsed;
+			this.y = initialY + motionFunction(motionFunctionTime);
+		}
+	}
+
+	public function setMotionFunction(func:Float->Float, increment:Float) {
+		this.motionFunction = func;
+		this.motionFunctionTimeIncrement = increment;
+		initialY = y;
 	}
 }

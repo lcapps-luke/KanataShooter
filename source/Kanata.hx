@@ -1,8 +1,11 @@
 package;
 
+import enemy.TrippleEnemy;
 import firemode.AbstractFireMode;
 import firemode.DoubleFireMode;
+import firemode.QuadFireMode;
 import firemode.SingleFireMode;
+import firemode.TripleFireMode;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.effects.FlxFlicker;
@@ -159,8 +162,8 @@ class Kanata extends FlxSprite {
 			fireMode = switch (v) {
 				case 0: new SingleFireMode(haloGroup);
 				case 1: new DoubleFireMode(haloGroup);
-				case 2: new DoubleFireMode(haloGroup);
-				default: new DoubleFireMode(haloGroup);
+				case 2: new TripleFireMode(haloGroup);
+				default: new QuadFireMode(haloGroup);
 			}
 		}
 
