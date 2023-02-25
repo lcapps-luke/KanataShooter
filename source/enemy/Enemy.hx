@@ -11,6 +11,8 @@ class Enemy extends FlxSprite {
 	public var group:FlxTypedGroup<Enemy>;
 
 	public var size(default, null):Int = 1;
+	public var dieOnPlayerHit(default, null):Bool = true;
+	public var canKill(default, null):Bool = true;
 
 	override function update(elapsed:Float) {
 		super.update(elapsed);

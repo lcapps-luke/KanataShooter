@@ -7,7 +7,7 @@ import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.effects.particles.FlxEmitter;
 import flixel.group.FlxGroup.FlxTypedGroup;
-import flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup;
+import flixel.group.FlxSpriteGroup;
 import flixel.input.actions.FlxAction.FlxActionDigital;
 import flixel.input.actions.FlxActionManager;
 import flixel.math.FlxMath;
@@ -28,6 +28,7 @@ class PlayState extends FlxState {
 	private var enemyParticles:FlxEmitter;
 	private var pickup:FlxTypedGroup<PowerPickup>;
 	private var kanata:Kanata;
+	private var boss:FlxSpriteGroup;
 	private var enemy:FlxTypedGroup<Enemy>;
 	private var playerBullet:FlxTypedSpriteGroup<Halo>;
 	private var cloudFront:FlxTypedGroup<Cloud>;
@@ -36,6 +37,7 @@ class PlayState extends FlxState {
 
 	private var attractBox:FlxSprite;
 	private var pickupBox:FlxSprite;
+	private var hitBox:FlxSprite;
 
 	private var up:FlxActionDigital;
 	private var down:FlxActionDigital;
@@ -44,6 +46,7 @@ class PlayState extends FlxState {
 	private var shoot:FlxActionDigital;
 
 	private var shootCooldown:Float = 0;
+	private var progress:Int = 0;
 	private var score:Int = 0;
 
 	private var enemySpawner:Spawner;
@@ -87,6 +90,13 @@ class PlayState extends FlxState {
 		pickupBox.makeGraphic(447, 60, FlxColor.TRANSPARENT);
 		add(pickupBox);
 
+		hitBox = new FlxSprite(0, 0, AssetPaths.boss_bullet__png);
+		hitBox.visible = false;
+		add(hitBox);
+
+		boss = new FlxSpriteGroup();
+		add(boss);
+
 		enemy = new FlxTypedGroup<Enemy>();
 		add(enemy);
 
@@ -99,7 +109,7 @@ class PlayState extends FlxState {
 		powerMeter = new PowerMeter([10, 30, 90]);
 		add(powerMeter);
 
-		enemySpawner = new Spawner(enemy, onEnemyKill);
+		enemySpawner = new Spawner(enemy, onEnemyKill, boss);
 	}
 
 	private inline function makeStarLayer(speed:Int, flip:Bool = false) {
@@ -111,6 +121,7 @@ class PlayState extends FlxState {
 
 		var b = new FlxSprite(a.width, 0, AssetPaths.stars__png);
 		b.velocity.set(speed);
+		b.solid = false;
 		add(b);
 		starBg.push(b);
 
@@ -144,7 +155,9 @@ class PlayState extends FlxState {
 		FlxG.overlap(playerBullet, enemy, onBulletEnemyOverlap, onBulletEnemyCheck);
 
 		// enemy-player collision
-		FlxG.overlap(kanata, enemy, onPlayerHit);
+		hitBox.x = kanata.x;
+		hitBox.y = kanata.y;
+		FlxG.overlap(hitBox, enemy, onPlayerHit, checkPlayerHit);
 
 		// player-pickup collision
 		attractBox.setPosition(kanata.x + kanata.width / 2 - PICKUP_RADIUS, kanata.y + kanata.height / 2 - PICKUP_RADIUS);
@@ -158,11 +171,14 @@ class PlayState extends FlxState {
 			}
 		}
 
-		enemySpawner.update(elapsed, score);
+		enemySpawner.update(elapsed, progress);
 	}
 
 	private inline function onBulletEnemyCheck(halo:Halo, enemy:Enemy) {
-		return FlxG.pixelPerfectOverlap(halo, enemy);
+		if (enemy.canKill) {
+			return FlxG.pixelPerfectOverlap(halo, enemy);
+		}
+		return false;
 	}
 
 	private function onBulletEnemyOverlap(halo:Halo, enemy:Enemy) {
@@ -170,10 +186,16 @@ class PlayState extends FlxState {
 		enemy.hurt(1);
 	}
 
-	private function onPlayerHit(player:Kanata, enemy:Enemy) {
-		enemy.kill();
+	private inline function checkPlayerHit(player:FlxSprite, enemy:Enemy) {
+		return FlxG.pixelPerfectOverlap(player, enemy);
+	}
+
+	private function onPlayerHit(player:FlxSprite, enemy:Enemy) {
+		if (enemy.dieOnPlayerHit) {
+			enemy.kill();
+		}
 		kanata.hurt(0);
-		score = 0;
+		// progress = 0;
 		powerMeter.value = Math.floor(powerMeter.value / 4);
 		kanata.power = powerMeter.getFilled();
 	}
@@ -187,6 +209,8 @@ class PlayState extends FlxState {
 	}
 
 	private function onPickup(radius:FlxSprite, pickup:PowerPickup) {
+		score += 1;
+
 		pickup.kill();
 		var before = powerMeter.getFilled();
 		powerMeter.value++;
@@ -198,7 +222,8 @@ class PlayState extends FlxState {
 	}
 
 	private function onEnemyKill(enemy:Enemy) {
-		score++;
+		progress++;
+		score += enemy.size * 10;
 
 		enemyParticles.x = enemy.x;
 		enemyParticles.y = enemy.y;
@@ -208,7 +233,11 @@ class PlayState extends FlxState {
 
 		for (i in 0...enemy.size) {
 			var p = pickup.recycle(PowerPickup, PowerPickup.new);
-			p.emit(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2, enemy.velocity.x);
+
+			var px = enemy.x + FlxG.random.float(enemy.width * 0.25, enemy.width * 0.75);
+			var py = enemy.y + FlxG.random.float(enemy.height * 0.25, enemy.height * 0.75);
+
+			p.emit(px, py, enemy.velocity.x);
 		}
 	}
 }
