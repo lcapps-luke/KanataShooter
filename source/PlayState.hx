@@ -1,10 +1,7 @@
 package;
 
-import enemy.DoubleEnemy;
 import enemy.Enemy;
-import enemy.QuadEnemy;
-import enemy.SingleEnemy;
-import enemy.TrippleEnemy;
+import enemy.Spawner;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
@@ -49,7 +46,7 @@ class PlayState extends FlxState {
 	private var shootCooldown:Float = 0;
 	private var score:Int = 0;
 
-	private var enemySpawnTimer:Float = 0;
+	private var enemySpawner:Spawner;
 
 	override public function create() {
 		super.create();
@@ -101,6 +98,8 @@ class PlayState extends FlxState {
 
 		powerMeter = new PowerMeter([10, 30, 90]);
 		add(powerMeter);
+
+		enemySpawner = new Spawner(enemy, onEnemyKill);
 	}
 
 	private inline function makeStarLayer(speed:Int, flip:Bool = false) {
@@ -159,18 +158,7 @@ class PlayState extends FlxState {
 			}
 		}
 
-		enemySpawnTimer -= elapsed;
-		if (enemySpawnTimer < 0) {
-			var e = getNextEnemy(score);
-			e.y = FlxG.random.float(0, FlxG.height - e.height);
-			e.x = FlxG.width;
-			e.velocity.set(-200);
-			e.killCallback = onEnemyKill;
-			e.group = enemy;
-
-			var minTime = Math.abs(e.velocity.x / e.width);
-			enemySpawnTimer = FlxG.random.float(minTime, minTime * 2);
-		}
+		enemySpawner.update(elapsed, score);
 	}
 
 	private inline function onBulletEnemyCheck(halo:Halo, enemy:Enemy) {
@@ -222,92 +210,5 @@ class PlayState extends FlxState {
 			var p = pickup.recycle(PowerPickup, PowerPickup.new);
 			p.emit(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2, enemy.velocity.x);
 		}
-	}
-
-	function getNextEnemy(score:Int):Enemy {
-		// 1
-		if (score < 5) {
-			return enemy.recycle(SingleEnemy, SingleEnemy.new);
-		}
-
-		// int 2
-		if (score < 30) {
-			return FlxG.random.bool(25) ? enemy.recycle(DoubleEnemy, DoubleEnemy.new) : enemy.recycle(SingleEnemy, SingleEnemy.new);
-		}
-
-		// 2
-		if (score < 60) {
-			return FlxG.random.bool(50) ? enemy.recycle(DoubleEnemy, DoubleEnemy.new) : enemy.recycle(SingleEnemy, SingleEnemy.new);
-		}
-
-		// int 3
-		if (score < 100) {
-			if (FlxG.random.bool(25)) {
-				return enemy.recycle(TrippleEnemy, TrippleEnemy.new);
-			}
-			else {
-				return FlxG.random.bool(50) ? enemy.recycle(DoubleEnemy, DoubleEnemy.new) : enemy.recycle(SingleEnemy, SingleEnemy.new);
-			}
-		}
-
-		// 3
-		if (score < 150) {
-			switch (FlxG.random.int(0, 2)) {
-				case 0:
-					return enemy.recycle(SingleEnemy, SingleEnemy.new);
-				case 1:
-					return enemy.recycle(DoubleEnemy, DoubleEnemy.new);
-				default:
-					return enemy.recycle(TrippleEnemy, TrippleEnemy.new);
-			}
-		}
-
-		// int 4
-		if (score < 220) {
-			if (FlxG.random.bool(25)) {
-				return enemy.recycle(QuadEnemy, QuadEnemy.new);
-			}
-			else {
-				switch (FlxG.random.int(0, 2)) {
-					case 0:
-						return enemy.recycle(SingleEnemy, SingleEnemy.new);
-					case 1:
-						return enemy.recycle(DoubleEnemy, DoubleEnemy.new);
-					default:
-						return enemy.recycle(TrippleEnemy, TrippleEnemy.new);
-				}
-			}
-		}
-
-		// 4
-		if (score < 300) {
-			switch (FlxG.random.int(0, 3)) {
-				case 0:
-					return enemy.recycle(SingleEnemy, SingleEnemy.new);
-				case 1:
-					return enemy.recycle(DoubleEnemy, DoubleEnemy.new);
-				case 2:
-					return enemy.recycle(TrippleEnemy, TrippleEnemy.new);
-				default:
-					return enemy.recycle(QuadEnemy, QuadEnemy.new);
-			}
-		}
-
-		if (score < 400) {
-			switch (FlxG.random.int(0, 2)) {
-				case 0:
-					return enemy.recycle(DoubleEnemy, DoubleEnemy.new);
-				case 1:
-					return enemy.recycle(TrippleEnemy, TrippleEnemy.new);
-				default:
-					return enemy.recycle(QuadEnemy, QuadEnemy.new);
-			}
-		}
-
-		if (score < 500) {
-			return FlxG.random.bool(50) ? enemy.recycle(TrippleEnemy, TrippleEnemy.new) : enemy.recycle(QuadEnemy, QuadEnemy.new);
-		}
-
-		return enemy.recycle(QuadEnemy, QuadEnemy.new);
 	}
 }

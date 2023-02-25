@@ -2,7 +2,7 @@ package enemy;
 
 import flixel.FlxG;
 
-class TrippleEnemy extends Enemy {
+class TripleEnemy extends Enemy {
 	public function new() {
 		super(0, 0, AssetPaths.enemy_3__png);
 		health = 6;

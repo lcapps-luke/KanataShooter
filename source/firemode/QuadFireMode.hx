@@ -19,8 +19,8 @@ class QuadFireMode extends AbstractFireMode {
 	}
 
 	function fireB() {
-		makeHalo(0, 0, true).velocity.rotateByDegrees(-10);
-		makeHalo(0, 0, false).velocity.rotateByDegrees(10);
+		makeHalo(0, -20, true).velocity.rotateByDegrees(-10);
+		makeHalo(0, 20, false).velocity.rotateByDegrees(10);
 	}
 
 	private function makeHaloFunc(func:Float->Float, sound:Bool) {

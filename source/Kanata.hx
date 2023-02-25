@@ -1,6 +1,5 @@
 package;
 
-import enemy.TrippleEnemy;
 import firemode.AbstractFireMode;
 import firemode.DoubleFireMode;
 import firemode.QuadFireMode;
