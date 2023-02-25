@@ -7,7 +7,7 @@ import flixel.text.FlxText;
 import flixel.util.FlxCollision;
 import flixel.util.FlxColor;
 
-class GameOverSubState extends FlxSubState {
+class GameOverSubState extends AbstractMenuState {
 	private var bg:FlxSprite;
 
 	public function new() {
@@ -18,20 +18,26 @@ class GameOverSubState extends FlxSubState {
 		bg.y = FlxG.height / 2 - bg.height / 2;
 		add(bg);
 
-		var text = new FlxText(0, 0, -1, "Game Over", 72);
+		var text = new FlxText(bg.x + 116, bg.y + 94, -1, "Game Over", 48);
 		text.color = FlxColor.BLACK;
-		text.x = FlxG.width / 2 - text.width / 2;
-		text.y = FlxG.height / 2 - text.height / 2;
+		add(text);
+
+		text = new FlxText(bg.x + 216, bg.y + 214, -1, "Retry", 36);
+		text.color = FlxColor.BLACK;
 		add(text);
 	}
 
 	override function update(elapsed:Float) {
 		super.update(elapsed);
 
-		if (FlxG.mouse.justReleased) {
-			if (FlxCollision.pixelPerfectPointCheck(FlxG.mouse.x, FlxG.mouse.y, bg)) {
+		if (pointerClick.triggered) {
+			if (FlxCollision.pixelPerfectPointCheck(Math.round(pointerX), Math.round(pointerY), bg)) {
 				FlxG.switchState(new PlayState());
 			}
+		}
+
+		if (buttonClick.triggered) {
+			FlxG.switchState(new PlayState());
 		}
 	}
 }

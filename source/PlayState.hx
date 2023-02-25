@@ -9,11 +9,11 @@ import flixel.effects.particles.FlxEmitter;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.group.FlxSpriteGroup;
 import flixel.input.actions.FlxAction.FlxActionDigital;
-import flixel.input.actions.FlxActionManager;
 import flixel.math.FlxMath;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import flixel.util.FlxGradient;
+import flixel.util.FlxSpriteUtil;
 import menu.GameOverSubState;
 import menu.InitialSubState;
 import menu.WinSubState;
@@ -37,6 +37,8 @@ class PlayState extends FlxState {
 	private var cloudFront:FlxTypedGroup<Cloud>;
 	private var scoreText:FlxText;
 	private var powerMeter:PowerMeter;
+	private var hearts:Array<FlxSprite>;
+	private var bossHealthBar:Array<FlxSprite>;
 
 	private var attractBox:FlxSprite;
 	private var pickupBox:FlxSprite;
@@ -116,6 +118,28 @@ class PlayState extends FlxState {
 
 		powerMeter = new PowerMeter([10, 30, 90]);
 		add(powerMeter);
+
+		hearts = new Array<FlxSprite>();
+		for (i in 0...3) {
+			var hx = FlxG.width / 2 - (5 * 69) / 2 + (69 * 2 * i);
+			var h = new FlxSprite(hx, 40, AssetPaths.heart__png);
+			add(h);
+			hearts.push(h);
+		}
+
+		bossHealthBar = new Array<FlxSprite>();
+		var barInner = new FlxSprite(1280, 40);
+		barInner.makeGraphic(FlxG.width - 1280 - 40, 69);
+		barInner.origin.set(0, 0);
+		barInner.visible = false;
+		add(barInner);
+		bossHealthBar.push(barInner);
+		var barOuter = new FlxSprite(1280, 40);
+		barOuter.makeGraphic(FlxG.width - 1280 - 40, 69, FlxColor.TRANSPARENT);
+		FlxSpriteUtil.drawRect(barOuter, 0, 0, barOuter.width, barOuter.height, FlxColor.TRANSPARENT, {thickness: 6, color: FlxColor.WHITE});
+		barOuter.visible = false;
+		add(barOuter);
+		bossHealthBar.push(barOuter);
 
 		if (firstPlay) {
 			firstPlay = false;
@@ -209,6 +233,12 @@ class PlayState extends FlxState {
 
 		if (enemySpawner != null) {
 			enemySpawner.update(elapsed, progress);
+
+			if (enemySpawner.bossSpawned) {
+				bossHealthBar[0].visible = true;
+				bossHealthBar[0].scale.set(enemySpawner.getBossHealth(), 1);
+				bossHealthBar[1].visible = true;
+			}
 		}
 	}
 
@@ -242,6 +272,10 @@ class PlayState extends FlxState {
 		}
 		powerMeter.value = Math.floor(powerMeter.value / 4);
 		kanata.power = powerMeter.getFilled();
+
+		for (i in 0...hearts.length) {
+			hearts[i].visible = kanata.health > i;
+		}
 	}
 
 	private inline function checkPickupRadiusHit(radius:FlxSprite, pickup:PowerPickup):Bool {

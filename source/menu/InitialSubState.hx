@@ -2,12 +2,11 @@ package menu;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.FlxSubState;
 import flixel.text.FlxText;
 import flixel.util.FlxCollision;
 import flixel.util.FlxColor;
 
-class InitialSubState extends FlxSubState {
+class InitialSubState extends AbstractMenuState {
 	private var bg:FlxSprite;
 
 	public function new() {
@@ -28,10 +27,14 @@ class InitialSubState extends FlxSubState {
 	override function update(elapsed:Float) {
 		super.update(elapsed);
 
-		if (FlxG.mouse.justReleased) {
-			if (FlxCollision.pixelPerfectPointCheck(FlxG.mouse.x, FlxG.mouse.y, bg)) {
+		if (pointerClick.triggered) {
+			if (FlxCollision.pixelPerfectPointCheck(Math.round(pointerX), Math.round(pointerY), bg)) {
 				close();
 			}
+		}
+
+		if (buttonClick.triggered) {
+			close();
 		}
 	}
 }

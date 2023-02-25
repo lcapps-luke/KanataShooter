@@ -7,7 +7,7 @@ import flixel.text.FlxText;
 import flixel.util.FlxCollision;
 import flixel.util.FlxColor;
 
-class WinSubState extends FlxSubState {
+class WinSubState extends AbstractMenuState {
 	private var bg:FlxSprite;
 
 	public function new(score:Int, lives:Float, time:Float) {
@@ -33,11 +33,12 @@ class WinSubState extends FlxSubState {
 		add(text);
 
 		var t = Math.floor(time);
-		text = new FlxText(bg.x + 102, bg.y + 194 + 60 * 2, -1, 'Time: $t', 36);
+		var ts = Math.max(0, 300 - t);
+		text = new FlxText(bg.x + 102, bg.y + 194 + 60 * 2, -1, 'Time: $t (+$ts)', 36);
 		text.color = FlxColor.BLACK;
 		add(text);
 
-		var total = score + ls;
+		var total = score + ls + ts;
 		text = new FlxText(bg.x + 102, bg.y + 194 + 60 * 3.5, -1, 'Total: $total', 36);
 		text.color = FlxColor.BLACK;
 		add(text);
@@ -50,10 +51,14 @@ class WinSubState extends FlxSubState {
 	override function update(elapsed:Float) {
 		super.update(elapsed);
 
-		if (FlxG.mouse.justReleased) {
-			if (FlxCollision.pixelPerfectPointCheck(FlxG.mouse.x, FlxG.mouse.y, bg)) {
-				close();
+		if (pointerClick.triggered) {
+			if (FlxCollision.pixelPerfectPointCheck(Math.round(pointerX), Math.round(pointerY), bg)) {
+				FlxG.switchState(new PlayState());
 			}
+		}
+
+		if (buttonClick.triggered) {
+			FlxG.switchState(new PlayState());
 		}
 	}
 }

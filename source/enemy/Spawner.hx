@@ -11,7 +11,8 @@ class Spawner {
 	private var callback:Enemy->Void;
 	private var timer:Float = 0;
 
-	private var bossSpawned = false;
+	public var boss:Enemy;
+	public var bossSpawned(default, null) = false;
 
 	private var phases:Array<Phase> = [
 		{
@@ -67,6 +68,10 @@ class Spawner {
 		this.bossGroup = bossGroup;
 	}
 
+	public function getBossHealth():Float {
+		return boss.health / 300;
+	}
+
 	public function update(s:Float, i:Int) {
 		if (bossSpawned) {
 			return;
@@ -101,12 +106,12 @@ class Spawner {
 					return e;
 				}
 				catch (e) {
-					trace(e);
+					FlxG.log.error(e);
 				}
 			}
 		}
 
-		var boss = getBoss(group, bossGroup);
+		boss = getBoss(group, bossGroup);
 		boss.killCallback = callback;
 		boss.group = group;
 		bossSpawned = true;
