@@ -14,6 +14,9 @@ import flixel.math.FlxMath;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import flixel.util.FlxGradient;
+import menu.GameOverSubState;
+import menu.InitialSubState;
+import menu.WinSubState;
 
 class PlayState extends FlxState {
 	private static inline var SPEED = 512.0;
@@ -21,7 +24,7 @@ class PlayState extends FlxState {
 	private static inline var HALO_SPEED = 1280;
 	private static inline var PICKUP_RADIUS = 240;
 
-	private static var ACTIONS:FlxActionManager;
+	private static var firstPlay = true;
 
 	private var starBg:Array<FlxSprite> = [];
 	private var cloudBack:FlxTypedGroup<Cloud>;
@@ -48,8 +51,13 @@ class PlayState extends FlxState {
 	private var shootCooldown:Float = 0;
 	private var progress:Int = 0;
 	private var score:Int = 0;
+	private var lives:Int = 3;
+	private var playTime:Float = 0;
 
 	private var enemySpawner:Spawner;
+	private var bossKilled:Bool = false;
+	private var gameOver:Bool = false;
+	private var gameEndTimer:Float = 3;
 
 	override public function create() {
 		super.create();
@@ -109,7 +117,20 @@ class PlayState extends FlxState {
 		powerMeter = new PowerMeter([10, 30, 90]);
 		add(powerMeter);
 
-		enemySpawner = new Spawner(enemy, onEnemyKill, boss);
+		if (firstPlay) {
+			firstPlay = false;
+			persistentUpdate = true;
+			var menu = new InitialSubState();
+			menu.closeCallback = function() {
+				enemySpawner = new Spawner(enemy, onEnemyKill, boss);
+				playTime = 0;
+			}
+			openSubState(menu);
+		}
+		else {
+			enemySpawner = new Spawner(enemy, onEnemyKill, boss);
+			playTime = 0;
+		}
 	}
 
 	private inline function makeStarLayer(speed:Int, flip:Bool = false) {
@@ -150,6 +171,21 @@ class PlayState extends FlxState {
 		super.update(elapsed);
 
 		scoreText.text = Std.string(score);
+		playTime += elapsed;
+
+		if (gameOver) {
+			gameEndTimer -= elapsed;
+			if (gameEndTimer < 0) {
+				persistentUpdate = false;
+
+				if (bossKilled) {
+					openSubState(new WinSubState(score, kanata.health, playTime));
+				}
+				else {
+					openSubState(new GameOverSubState());
+				}
+			}
+		}
 
 		// bullet-enemy collision
 		FlxG.overlap(playerBullet, enemy, onBulletEnemyOverlap, onBulletEnemyCheck);
@@ -171,7 +207,9 @@ class PlayState extends FlxState {
 			}
 		}
 
-		enemySpawner.update(elapsed, progress);
+		if (enemySpawner != null) {
+			enemySpawner.update(elapsed, progress);
+		}
 	}
 
 	private inline function onBulletEnemyCheck(halo:Halo, enemy:Enemy) {
@@ -194,8 +232,14 @@ class PlayState extends FlxState {
 		if (enemy.dieOnPlayerHit) {
 			enemy.kill();
 		}
-		kanata.hurt(0);
-		// progress = 0;
+		kanata.hurt(1);
+		if (!kanata.alive) {
+			kanata.kill();
+			attractBox.kill();
+			pickupBox.kill();
+			hitBox.kill();
+			gameOver = true;
+		}
 		powerMeter.value = Math.floor(powerMeter.value / 4);
 		kanata.power = powerMeter.getFilled();
 	}
@@ -238,6 +282,11 @@ class PlayState extends FlxState {
 			var py = enemy.y + FlxG.random.float(enemy.height * 0.25, enemy.height * 0.75);
 
 			p.emit(px, py, enemy.velocity.x);
+		}
+
+		if (enemy.isBoss) {
+			bossKilled = true;
+			gameOver = true;
 		}
 	}
 }

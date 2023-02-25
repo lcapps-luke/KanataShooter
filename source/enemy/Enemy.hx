@@ -13,6 +13,7 @@ class Enemy extends FlxSprite {
 	public var size(default, null):Int = 1;
 	public var dieOnPlayerHit(default, null):Bool = true;
 	public var canKill(default, null):Bool = true;
+	public var isBoss(default, null):Bool = false;
 
 	override function update(elapsed:Float) {
 		super.update(elapsed);

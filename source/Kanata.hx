@@ -52,6 +52,8 @@ class Kanata extends FlxSprite {
 
 		fireMode = new SingleFireMode(haloGroup);
 
+		health = 3;
+
 		actions = FlxG.inputs.add(new FlxActionManager());
 
 		up = new FlxActionDigital();
@@ -148,8 +150,8 @@ class Kanata extends FlxSprite {
 	}
 
 	override function hurt(damage:Float) {
-		super.hurt(damage);
 		if (hitTimer <= 0) {
+			super.hurt(damage);
 			FlxFlicker.flicker(this, 1.2, 0.08);
 			hitTimer = 1.3;
 			FlxG.sound.play(AssetPaths.hurt__wav);

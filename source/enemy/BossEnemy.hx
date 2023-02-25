@@ -33,18 +33,19 @@ class BossEnemy extends Enemy {
 		health = 300;
 		size = 100;
 		dieOnPlayerHit = false;
+		isBoss = true;
 
-		body = new FlxSprite(0, 0, AssetPaths.boss_body__png);
+		body = new FlxSprite(x, y, AssetPaths.boss_body__png);
 		visualGroup.add(body);
 
-		mouth = new FlxSprite(0, 0);
+		mouth = new FlxSprite(x + MOUTH_X, y + MOUTH_Y);
 		mouth.loadGraphic(AssetPaths.boss_mouth__png, true, 117, 128);
 		mouth.animation.add("open", [0, 1, 2, 3, 4], 12, false);
 		mouth.animation.add("close", [4, 3, 2, 1, 0], 24, false);
 		mouth.animation.finishCallback = onMouthAnimationFinished;
 		visualGroup.add(mouth);
 
-		eyes = new FlxSprite(0, 0);
+		eyes = new FlxSprite(x + EYES_X, y + EYES_Y);
 		eyes.loadGraphic(AssetPaths.boss_eyes__png, true, 136, 90);
 		eyes.animation.add("blink", [0, 1, 0], 12, false);
 		visualGroup.add(eyes);
@@ -65,7 +66,6 @@ class BossEnemy extends Enemy {
 		walkCycle += STEP_SPEED * elapsed;
 		this.y = FlxG.height / 2 - CENTER_Y + (Math.cos(walkCycle) * STEP_Y);
 
-		// behaviours
 		targetPositionTimer -= elapsed;
 		if (targetPositionTimer < 0) {
 			targetPosition = FlxG.random.float(FlxG.width - width * 0.75, FlxG.width - width * 0.5);
