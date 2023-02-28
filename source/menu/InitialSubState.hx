@@ -17,8 +17,7 @@ class InitialSubState extends AbstractMenuState {
 		bg.y = FlxG.height / 2 - bg.height / 2;
 		add(bg);
 
-		var text = new FlxText(0, 0, -1, "Play", 72);
-		text.color = FlxColor.BLACK;
+		var text = new TitleText(0, 0, "Play", 72);
 		text.x = FlxG.width / 2 - text.width / 2;
 		text.y = FlxG.height / 2 - text.height / 2;
 		add(text);

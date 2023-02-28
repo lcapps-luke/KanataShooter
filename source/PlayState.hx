@@ -16,6 +16,7 @@ import flixel.util.FlxGradient;
 import flixel.util.FlxSpriteUtil;
 import menu.GameOverSubState;
 import menu.InitialSubState;
+import menu.TitleText;
 import menu.WinSubState;
 
 class PlayState extends FlxState {
@@ -35,7 +36,7 @@ class PlayState extends FlxState {
 	private var enemy:FlxTypedGroup<Enemy>;
 	private var playerBullet:FlxTypedSpriteGroup<Halo>;
 	private var cloudFront:FlxTypedGroup<Cloud>;
-	private var scoreText:FlxText;
+	private var scoreText:TitleText;
 	private var powerMeter:PowerMeter;
 	private var hearts:Array<FlxSprite>;
 	private var bossHealthBar:Array<FlxSprite>;
@@ -112,8 +113,7 @@ class PlayState extends FlxState {
 
 		cloudFront = makeCloudLayer(0.2, 0.5, -70);
 
-		scoreText = new FlxText(40, 40);
-		scoreText.size = 72;
+		scoreText = new TitleText(40, 20, "0", 90);
 		add(scoreText);
 
 		powerMeter = new PowerMeter([10, 30, 90]);

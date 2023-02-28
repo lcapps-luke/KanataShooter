@@ -18,12 +18,11 @@ class GameOverSubState extends AbstractMenuState {
 		bg.y = FlxG.height / 2 - bg.height / 2;
 		add(bg);
 
-		var text = new FlxText(bg.x + 116, bg.y + 94, -1, "Game Over", 48);
-		text.color = FlxColor.BLACK;
-		add(text);
+		var title = new TitleText(bg.x + 80, bg.y + 94, "Game Over", 72);
+		add(title);
 
-		text = new FlxText(bg.x + 216, bg.y + 214, -1, "Retry", 36);
-		text.color = FlxColor.BLACK;
+		var text = new FlxText(bg.x + 227, bg.y + 214, -1, "Retry", 36);
+		text.setFormat(AssetPaths.Blippo_Black__otf, 36, FlxColor.BLACK);
 		add(text);
 	}
 
