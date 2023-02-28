@@ -52,14 +52,12 @@ class WinSubState extends AbstractMenuState {
 	override function update(elapsed:Float) {
 		super.update(elapsed);
 
-		if (pointerClick.triggered) {
-			if (FlxCollision.pixelPerfectPointCheck(Math.round(pointerX), Math.round(pointerY), bg)) {
-				FlxG.switchState(new PlayState());
-			}
+		if (checkClicked(bg)) {
+			navigateConfirm();
 		}
+	}
 
-		if (buttonClick.triggered) {
-			FlxG.switchState(new PlayState());
-		}
+	function navigateConfirm() {
+		FlxG.switchState(new PlayState());
 	}
 }

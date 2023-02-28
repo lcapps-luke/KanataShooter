@@ -26,14 +26,12 @@ class InitialSubState extends AbstractMenuState {
 	override function update(elapsed:Float) {
 		super.update(elapsed);
 
-		if (pointerClick.triggered) {
-			if (FlxCollision.pixelPerfectPointCheck(Math.round(pointerX), Math.round(pointerY), bg)) {
-				close();
-			}
+		if (checkClicked(bg)) {
+			navigateConfirm();
 		}
+	}
 
-		if (buttonClick.triggered) {
-			close();
-		}
+	function navigateConfirm() {
+		close();
 	}
 }

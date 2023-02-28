@@ -4,8 +4,8 @@
 
 	<!-- _________________________ Application Settings _________________________ -->
 
-	<app title="KanataShooter" file="KanataShooter" main="Main" version="2.0.1" company="Lc-Apps" />
-	<meta title="Kanata Shooter" package="uk.co.lcapps.kanatashooter" version="2.0.1" company="Lc-Apps" />
+	<app file="KanataShooter" main="Main" />
+	<meta title="Kanata Shooter" package="uk.co.lcapps.kanatashooter" version="2.0.1" company="Lc-Apps" companyUrl="https://lc-apps.co.uk/" />
 
 	<!--The flixel preloader is not accurate in Chrome. You can use it regularly if you embed the swf into a html file
 		or you can set the actual size of your file manually at "FlxPreloaderBase-onUpdate-bytesTotal"-->
@@ -17,13 +17,14 @@
 	<!-- ____________________________ Window Settings ___________________________ -->
 
 	<!--These window settings apply to all targets-->
-	<window width="1920" height="1080" fps="60" background="#000000" hardware="true" vsync="true" />
+	<window width="1920" height="1080" fps="60" background="#000000" hardware="true" vsync="true" allow-high-dpi="true" />
 
 	<!--HTML5-specific-->
 	<window if="html5" resizable="true" />
 
 	<!--Desktop-specific-->
 	<window if="desktop" width="854" height="480" orientation="landscape" fullscreen="false" resizable="true" />
+	<window if="hl" width="1920" height="1080"/>
 
 	<!--Mobile-specific-->
 	<window if="mobile" orientation="landscape" fullscreen="true" width="0" height="0" />
