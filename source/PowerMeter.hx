@@ -63,4 +63,8 @@ class PowerMeter extends FlxTypedGroup<FlxSprite> {
 
 		return value = v;
 	}
+
+	public function getQty(lvl:Int) {
+		return qty[lvl];
+	}
 }

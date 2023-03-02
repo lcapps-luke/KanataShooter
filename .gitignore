@@ -4,3 +4,4 @@ wip/
 private/
 publish -*.bat
 build -*.bat
+version.txt

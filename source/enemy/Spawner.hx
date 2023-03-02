@@ -69,7 +69,7 @@ class Spawner {
 	}
 
 	public function getBossHealth():Float {
-		return boss.health / 300;
+		return boss.health / BossEnemy.MAX_HEALTH;
 	}
 
 	public function update(s:Float, i:Int) {

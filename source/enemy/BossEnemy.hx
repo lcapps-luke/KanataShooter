@@ -5,6 +5,8 @@ import flixel.FlxSprite;
 import flixel.group.FlxSpriteGroup;
 
 class BossEnemy extends Enemy {
+	public static inline var MAX_HEALTH:Float = 200;
+
 	private static inline var CENTER_Y:Float = 350;
 	private static inline var MOUTH_X:Float = 24;
 	private static inline var MOUTH_Y:Float = 354;
@@ -30,7 +32,7 @@ class BossEnemy extends Enemy {
 	public function new(visualGroup:FlxSpriteGroup) {
 		super(FlxG.width, FlxG.height / 2 - CENTER_Y, AssetPaths.boss_body__png);
 		visible = false;
-		health = 300;
+		health = MAX_HEALTH;
 		size = 100;
 		dieOnPlayerHit = false;
 		isBoss = true;

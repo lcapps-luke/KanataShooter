@@ -119,7 +119,7 @@ class PlayState extends FlxState {
 		scoreText = new TitleText(40, 20, "0", 90);
 		add(scoreText);
 
-		powerMeter = new PowerMeter([10, 30, 90]);
+		powerMeter = new PowerMeter([10, 30, 70]);
 		add(powerMeter);
 
 		hearts = new Array<FlxSprite>();
@@ -281,7 +281,11 @@ class PlayState extends FlxState {
 			hitBox.kill();
 			gameOver = true;
 		}
-		powerMeter.value = Math.floor(powerMeter.value / 4);
+
+		var filled = powerMeter.getFilled();
+		var filledQty = powerMeter.getQty(filled - 1);
+		powerMeter.value = FlxMath.maxInt(filledQty - 5 * filled, 0);
+
 		kanata.power = powerMeter.getFilled();
 
 		for (i in 0...hearts.length) {
