@@ -2,9 +2,13 @@ package;
 
 import flixel.FlxG;
 import flixel.FlxGame;
+import itch.ItchUtilities;
 import openfl.display.Sprite;
 
 class Main extends Sprite {
+	public static var username:String = "anonymous";
+	public static var itchId:Null<Int> = null;
+
 	public function new() {
 		super();
 
@@ -17,5 +21,10 @@ class Main extends Sprite {
 		#end
 
 		addChild(game);
+
+		ItchUtilities.getUser(function(name, id) {
+			username = name;
+			itchId = id;
+		});
 	}
 }

@@ -18,6 +18,7 @@ import menu.GameOverSubState;
 import menu.InitialSubState;
 import menu.TitleText;
 import menu.WinSubState;
+import score.ScoreClient;
 
 class PlayState extends FlxState {
 	private static inline var SPEED = 512.0;
@@ -61,6 +62,8 @@ class PlayState extends FlxState {
 	private var bossKilled:Bool = false;
 	private var gameOver:Bool = false;
 	private var gameEndTimer:Float = 3;
+
+	private var scoreToken:String = null;
 
 	override public function create() {
 		super.create();
@@ -146,15 +149,22 @@ class PlayState extends FlxState {
 			persistentUpdate = true;
 			var menu = new InitialSubState();
 			menu.closeCallback = function() {
-				enemySpawner = new Spawner(enemy, onEnemyKill, boss);
-				playTime = 0;
+				startGame();
 			}
 			openSubState(menu);
 		}
 		else {
-			enemySpawner = new Spawner(enemy, onEnemyKill, boss);
-			playTime = 0;
+			startGame();
 		}
+	}
+
+	private function startGame() {
+		ScoreClient.getToken(function(token) {
+			this.scoreToken = token;
+		});
+
+		enemySpawner = new Spawner(enemy, onEnemyKill, boss);
+		playTime = 0;
 	}
 
 	private inline function makeStarLayer(speed:Int, flip:Bool = false) {
@@ -203,7 +213,8 @@ class PlayState extends FlxState {
 				persistentUpdate = false;
 
 				if (bossKilled) {
-					openSubState(new WinSubState(score, kanata.health, playTime));
+					firstPlay = true;
+					openSubState(new WinSubState(score, kanata.health, playTime, scoreToken));
 				}
 				else {
 					openSubState(new GameOverSubState());

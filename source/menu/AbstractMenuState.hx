@@ -1,15 +1,19 @@
 package menu;
 
+import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxSubState;
 import flixel.input.actions.FlxAction.FlxActionAnalog;
 import flixel.input.actions.FlxAction.FlxActionDigital;
 import flixel.input.actions.FlxActionManager;
-import flixel.system.replay.MouseRecord;
+import flixel.math.FlxPoint;
 import flixel.util.FlxCollision;
 import flixel.util.FlxDestroyUtil;
+import flixel.util.helpers.FlxBounds;
+import flixel.util.helpers.FlxPointRangeBounds;
 import input.ActionInputAnalogTouchPosition;
 import input.ActionInputDigitalTouch;
+import openfl.geom.Point;
 
 abstract class AbstractMenuState extends FlxSubState {
 	private var actions:FlxActionManager;
@@ -96,10 +100,11 @@ abstract class AbstractMenuState extends FlxSubState {
 		actions = FlxDestroyUtil.destroy(actions);
 	}
 
-	public function checkClicked(spr:FlxSprite) {
+	public function checkClicked(spr:FlxSprite, pixelPerfect:Bool = true) {
 		return pointerReleased.triggered
 			&& !pointerBlocked
-			&& FlxCollision.pixelPerfectPointCheck(Math.round(pointerX), Math.round(pointerY), spr);
+			&& (pixelPerfect ? FlxCollision.pixelPerfectPointCheck(Math.round(pointerX), Math.round(pointerY),
+				spr) : spr.overlapsPoint(FlxPoint.weak(pointerX, pointerY)));
 	}
 
 	abstract private function navigateConfirm():Void;

@@ -2,9 +2,7 @@ package menu;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.FlxSubState;
 import flixel.text.FlxText;
-import flixel.util.FlxCollision;
 import flixel.util.FlxColor;
 
 class GameOverSubState extends AbstractMenuState {
@@ -34,7 +32,7 @@ class GameOverSubState extends AbstractMenuState {
 		}
 	}
 
-	function navigateConfirm() {
+	private function navigateConfirm() {
 		FlxG.switchState(new PlayState());
 	}
 }
