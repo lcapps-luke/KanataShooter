@@ -6,6 +6,7 @@ import flixel.addons.ui.FlxInputText;
 import flixel.ui.FlxButton;
 import flixel.util.FlxColor;
 import score.ScoreClient;
+import utils.ui.GFTextInput;
 
 class SubmitScoreSubState extends AbstractMenuState {
 	public var sent(default, null):Bool = false;
@@ -15,7 +16,7 @@ class SubmitScoreSubState extends AbstractMenuState {
 	private var proof:String;
 
 	private var bg:FlxSprite;
-	private var nameInput:FlxInputText;
+	private var nameInput:GFTextInput;
 	private var submit:FlxButton;
 
 	public function new(score:Int, lives:Float, time:Float, token:String, total:Int) {
@@ -40,13 +41,11 @@ class SubmitScoreSubState extends AbstractMenuState {
 		back.y = FlxG.height - back.height - 20;
 		add(back);
 
-		nameInput = new FlxInputText(0, 0, 420, Main.username, 50); // , 0x000000, 0xFFFFFF);
-		// nameInput.setFormat(AssetPaths.Blippo_Black__otf, 72, 0x000000);
+		nameInput = new GFTextInput(0, 0, 420, Main.username, 50);
 		nameInput.caretWidth = 10;
 		nameInput.maxLength = 20;
 		nameInput.x = bg.x + bg.width / 2 - nameInput.width / 2;
 		nameInput.y = bg.y + bg.height / 2 - nameInput.height / 2 - 20;
-		nameInput.textField.needsSoftKeyboard = true;
 		add(nameInput);
 
 		submit = new FlxButton(0, 0, "Submit", onSubmit);
