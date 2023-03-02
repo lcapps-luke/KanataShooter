@@ -66,6 +66,7 @@ class SubmitScoreSubState extends AbstractMenuState {
 		Main.username = nameInput.text;
 
 		ScoreClient.submit(token, nameInput.text, score, function(success) {
+			ScoreSubState.clearCache();
 			close();
 		}, Std.string(Main.itchId));
 	}

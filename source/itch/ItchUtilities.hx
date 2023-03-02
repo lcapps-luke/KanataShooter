@@ -4,36 +4,27 @@ package itch;
 import js.Syntax;
 #end
 
-class ItchUtilities
-{
-	public static function getUser(callback:String->Int->Void)
-	{
+class ItchUtilities {
+	public static function getUser(callback:String->Int->Void) {
 		var key = getApiKey();
 
-		if (key == null)
-		{
+		if (key == null) {
 			return;
 		}
 
-		ItchClient.getMe(key, response ->
-		{
-			if (response.user != null)
-			{
+		ItchClient.getMe(key, response -> {
+			if (response.user != null) {
 				callback(response.user.display_name, response.user.id);
 			}
 		});
 	}
 
-	private static function getApiKey():Null<String>
-	{
+	private static function getApiKey():Null<String> {
 		#if html5
-		if (Syntax.code("typeof Itch !== 'undefined'"))
-		{
+		if (Syntax.code("typeof Itch !== 'undefined'")) {
 			return Syntax.code("Itch.env.ITCHIO_API_KEY");
 		}
-		#end
-
-		#if !android
+		#else
 		return Sys.getEnv("ITCHIO_API_KEY");
 		#end
 

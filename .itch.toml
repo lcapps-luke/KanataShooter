@@ -1,0 +1,5 @@
+[[actions]]
+name = "play"
+path = "KanataShooter.exe"
+platform = "windows"
+scope = "profile:me"

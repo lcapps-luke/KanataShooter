@@ -64,9 +64,14 @@ class ScoreSubState extends FlxSubState {
 	}
 
 	private function onScoresLoaded(loadedScores:Array<Score>) {
-		var names = new Array<String>();
+		if (loadedScores == null) {
+			loaded = true;
+			return;
+		}
+
 		scoreList = new Array<Score>();
 
+		var names = new Array<String>();
 		for (s in loadedScores) {
 			if (names.contains(s.name)) {
 				continue;
@@ -80,6 +85,12 @@ class ScoreSubState extends FlxSubState {
 	}
 
 	private function renderScores() {
+		if (scoreList == null) {
+			title.text = "Failed to Load Scores";
+			center(title);
+			return;
+		}
+
 		var maxNameWidth:Float = 0;
 		var scores = new Array<FlxText>();
 
@@ -108,5 +119,9 @@ class ScoreSubState extends FlxSubState {
 
 		title.text = "Recent High Scores";
 		center(title);
+	}
+
+	public static function clearCache() {
+		scoreList = null;
 	}
 }
