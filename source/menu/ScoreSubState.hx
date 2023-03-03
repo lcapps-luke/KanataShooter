@@ -91,14 +91,31 @@ class ScoreSubState extends FlxSubState {
 			return;
 		}
 
+		var f = openfl.text.Font.enumerateFonts().filter(f -> f.name == "Blippo Black")[0];
+		function checkGlyphs(str:String):Bool {
+			for (s in str.split("")) {
+				if (f.getGlyph(s) == 0) {
+					return false;
+				}
+			}
+			return true;
+		}
+
 		var maxNameWidth:Float = 0;
 		var scores = new Array<FlxText>();
 
 		var yy = 200;
 		var xx = FlxG.width / 4;
 		for (s in scoreList) {
+			var useDefaultFont = checkGlyphs(s.name);
+
 			var name = new FlxText(xx, yy, -1, s.name);
-			name.setFormat(AssetPaths.Blippo_Black__otf, 50, FlxColor.WHITE);
+			if (useDefaultFont) {
+				name.setFormat(AssetPaths.Blippo_Black__otf, 50, FlxColor.WHITE);
+			}
+			else {
+				name.setFormat(AssetPaths.MOBO__otf, 50, FlxColor.WHITE);
+			}
 			add(name);
 			maxNameWidth = Math.max(maxNameWidth, name.width);
 
