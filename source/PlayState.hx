@@ -10,7 +10,6 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.group.FlxSpriteGroup;
 import flixel.input.actions.FlxAction.FlxActionDigital;
 import flixel.math.FlxMath;
-import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import flixel.util.FlxGradient;
 import flixel.util.FlxSpriteUtil;
@@ -25,6 +24,7 @@ class PlayState extends FlxState {
 	private static inline var SHOOT_COOLDOWN = 0.25;
 	private static inline var HALO_SPEED = 1280;
 	private static inline var PICKUP_RADIUS = 240;
+	private static inline var BOSS_PICKUP_GROUP_SIZE = 100;
 
 	private static var firstPlay = true;
 
@@ -62,6 +62,7 @@ class PlayState extends FlxState {
 	private var bossKilled:Bool = false;
 	private var gameOver:Bool = false;
 	private var gameEndTimer:Float = 3;
+	private var bossPickupTimer:Float = 9;
 
 	private var scoreToken:String = null;
 
@@ -249,6 +250,12 @@ class PlayState extends FlxState {
 				bossHealthBar[0].visible = true;
 				bossHealthBar[0].scale.set(enemySpawner.getBossHealth(), 1);
 				bossHealthBar[1].visible = true;
+
+				bossPickupTimer -= elapsed;
+				if (bossPickupTimer < 0) {
+					spawnBossPickup();
+					bossPickupTimer = FlxG.random.float(4, 6);
+				}
 			}
 		}
 	}
@@ -336,6 +343,19 @@ class PlayState extends FlxState {
 		if (enemy.isBoss) {
 			bossKilled = true;
 			gameOver = true;
+		}
+	}
+
+	private function spawnBossPickup() {
+		var groupY = FlxG.random.float(0, FlxG.height - BOSS_PICKUP_GROUP_SIZE);
+
+		for (i in 0...5) {
+			var p = pickup.recycle(PowerPickup, PowerPickup.new);
+
+			var px = FlxG.width + FlxG.random.float(0, BOSS_PICKUP_GROUP_SIZE);
+			var py = FlxG.random.float(groupY, groupY + BOSS_PICKUP_GROUP_SIZE);
+			p.emit(px, py, -200);
+			p.acceleration.set(-200, 0);
 		}
 	}
 }
