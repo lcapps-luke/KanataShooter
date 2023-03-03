@@ -107,6 +107,16 @@ class ScoreSubState extends FlxSubState {
 			add(score);
 			scores.push(score);
 
+			if (s.supporter != null && s.supporter) {
+				score.borderColor = 0xFFAC7FFF;
+				score.borderSize = 5;
+				score.borderStyle = SHADOW;
+
+				name.borderColor = 0xFFAC7FFF;
+				name.borderSize = 5;
+				name.borderStyle = SHADOW;
+			}
+
 			yy += 70;
 			if (yy + 50 > FlxG.height) {
 				break;
