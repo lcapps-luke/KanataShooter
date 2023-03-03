@@ -2,7 +2,6 @@ package menu;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.addons.ui.FlxInputText;
 import flixel.ui.FlxButton;
 import flixel.util.FlxColor;
 import score.ScoreClient;
@@ -15,7 +14,6 @@ class SubmitScoreSubState extends AbstractMenuState {
 	private var score:Int;
 	private var proof:String;
 
-	private var bg:FlxSprite;
 	private var nameInput:GFTextInput;
 	private var submit:FlxButton;
 
@@ -31,7 +29,7 @@ class SubmitScoreSubState extends AbstractMenuState {
 	override function create() {
 		super.create();
 
-		bg = new FlxSprite(0, 0, AssetPaths.menu_small__png);
+		var bg = new FlxSprite(0, 0, AssetPaths.menu_small__png);
 		bg.x = FlxG.width / 2 - bg.width / 2;
 		bg.y = FlxG.height / 2 - bg.height / 2;
 		add(bg);
@@ -54,6 +52,14 @@ class SubmitScoreSubState extends AbstractMenuState {
 		submit.x = bg.x + bg.width / 2 - submit.width / 2;
 		submit.y = bg.y + bg.height - submit.height - 70;
 		add(submit);
+
+		#if mobile
+		var shift = -bg.y + 40;
+		bg.y += shift;
+		back.y += shift;
+		nameInput.y += shift;
+		submit.y += shift;
+		#end
 	}
 
 	private function navigateConfirm() {}
