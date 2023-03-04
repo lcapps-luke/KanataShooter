@@ -7,7 +7,7 @@ import haxe.crypto.Md5;
 
 class ScoreClient {
 	private static inline var ROOT:String = "https://score.lc-apps.co.uk/kanata";
-	private static inline var PERIOD_DAYS:Int = 60;
+	private static inline var PERIOD_DAYS:Int = 120;
 
 	private static var client = new HttpClient();
 
